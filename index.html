@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+   <!DOCTYPE html>
 <html lang="ar">
 
 <head>
@@ -12,8 +13,6 @@
       padding: 0;
       font-family: "Cairo", Arial, sans-serif;
       background-image: url(images.jpg);
-      /* background-image: url("https://heba89-lj.github.io/qr-pwa/472.PNG"); */
-
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -32,9 +31,7 @@
       padding: 20px;
       text-align: right;
       width: 100%;
-      /* background-image: url(images.jpg);
-      background-repeat: no-repeat;
-      background-size:cover; */
+      position: relative;
     }
 
     header h1 {
@@ -54,47 +51,56 @@
       font-size: 1.2rem;
     }
 
-    /* 🔸 المحتوى الرئيسي */
-    main {
-      width: 90%;
-      max-width: 900px;
-      margin: auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
+    /* 🔸 زر القائمة (الهامبرجر) */
+    .menu-toggle {
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      width: 30px;
+      height: 22px;
+      cursor: pointer;
+      z-index: 10;
     }
 
-    .section {
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
-      padding: 20px 30px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    .menu-toggle span {
+      display: block;
+      width: 100%;
+      height: 4px;
+      background-color: white;
+      margin-bottom: 5px;
+      border-radius: 2px;
       transition: 0.3s;
-      flex: 1 1 250px;
-      text-align: center;
     }
 
-    .section:hover {
-      transform: scale(1.05);
-      background-color: rgba(255, 255, 255, 0.2);
+    /* 🔸 القائمة المنسدلة */
+    .menu {
+      display: none;
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      background-color: rgba(0, 0, 0, 0.8);
+      border-radius: 10px;
+      padding: 10px 0;
+      width: 200px;
+      text-align: right;
     }
 
-    .section h2 {
-      color: #fff;
-      font-size: 1.4rem;
-      margin: 0;
-    }
-
-    a {
-      text-decoration: none;
+    .menu a {
+      display: block;
+      padding: 10px 20px;
       color: #ffb3b3;
+      text-decoration: none;
       font-weight: bold;
     }
 
-    a:hover {
+    .menu a:hover {
+      background-color: rgba(255, 255, 255, 0.2);
       color: #fff;
-      text-decoration: underline;
+    }
+
+    /* إظهار القائمة عند التفعيل */
+    .menu.active {
+      display: block;
     }
 
     /* 🔻 الفوتر */
@@ -114,41 +120,8 @@
         font-size: 1rem;
       }
 
-      main {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .section {
-        width: 90%;
-        font-size: 1.1rem;
-      }
-
       footer {
         font-size: 0.9rem;
-      }
-    }
-
-    /* 📱 أصغر من 480px */
-    @media (max-width: 480px) {
-      body {
-        margin: 0;
-      }
-
-      .nav-list li {
-        font-size: 0.95rem;
-      }
-
-      .section h2 {
-        font-size: 1.1rem;
-      }
-
-      .section {
-        padding: 15px;
-      }
-
-      footer {
-        font-size: 0.85rem;
       }
     }
   </style>
@@ -156,6 +129,14 @@
 
 <body>
   <header>
+    <!-- زر القائمة -->
+    <div class="menu-toggle" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- العناوين -->
     <h1>
       <ul class="nav-list">
         <li>النيابة العامة</li>
@@ -164,21 +145,27 @@
         <li>وحدة الفحص المتنوع</li>
       </ul>
     </h1>
+
+    <!-- القائمة المنسدلة -->
+    <div class="menu" id="menu">
+      <a href="https://drive.google.com/file/d/1i1zU5k5XAoRsL9a1qcSro0uIkMm1mv0s/view" target="_blank">📄 الأوراق المطلوبة</a>
+      <a href="https://drive.google.com/file/d/1KxYH031IyxJrIG_Fh5HTMd_SbVLARTLQ/view" target="_blank">📋 الاستعلامات</a>
+    </div>
   </header>
 
   <main>
-    <div class="section">
-      <h2><a href="https://drive.google.com/file/d/1i1zU5k5XAoRsL9a1qcSro0uIkMm1mv0s/view" target="_blank">📄 الأوراق المطلوبة</a></h2>
-    </div>
-
-    <div class="section">
-      <h2><a href="https://drive.google.com/file/d/1KxYH031IyxJrIG_Fh5HTMd_SbVLARTLQ/view" target="_blank">📋 الاستعلامات</a></h2>
-    </div>
+    <p style="margin-top: 100px;">اضغطي على الثلاث شرط لعرض القائمة 👆</p>
   </main>
 
   <footer>
     <p>© 2025 نيابة الشئون الاقتصادية وغسل الأموال - الإسكندرية</p>
   </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("menu").classList.toggle("active");
+    }
+  </script>
 </body>
 
 </html>
