@@ -1,0 +1,163 @@
+
+
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lateef:wght@200;300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <title>صفحة بخلفية متدرجة وتأثير جانبي</title>
+  <style>
+    /* إعدادات عامة */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "lateef" ,"Cairo", sans-serif;
+      /* background: linear-gradient(135deg, #6a11cb, #2575fc, #00c6ff, #6a11cb); */
+      background-image: url("khaligyoun71065-1.jpg");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment:fixed ;
+      background-size: 100%;
+      /* background-size: 400% 400%; */
+      /* animation: gradientMove 10s ease infinite; */
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 90vh;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* حركة الخلفية */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ✨ حركة الدخول من الجنب */
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(60px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* العنوان */
+    h1 {
+      font-size: 60px;
+      /* padding: 50px; */
+      text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      animation: slideInRight 1s ease forwards;
+    }
+
+    /* قائمة السطور */
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top:0;
+      width: 85%;
+      /* max-width: 400px; */
+    }
+
+    ul li {
+      background-color: rgba(255, 255, 255, 0.15);
+      margin: 12px 0;
+      padding: 15px ;
+      border-radius: 15px;
+      font-size: 1.1em;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      animation: slideInRight 0.9s ease forwards;
+      color: black;
+    }
+   
+
+    /* توقيت الظهور التدريجي للأسطر */
+    ul li:nth-child(1) { animation-delay: 0.4s; }
+    ul li:nth-child(2) { animation-delay: 0.7s; }
+    ul li:nth-child(3) { animation-delay: 1.0s; }
+    ul li:nth-child(4) { animation-delay: 1.3s; }
+
+    /* تأثير عند المرور */
+    ul li:hover {
+      transform: translateX(-5px);
+      background-color: rgba(48, 46, 46, 0.753);
+      color: #fff;
+    }
+
+    /* 🔹 الزر في أسفل الصفحة */
+    .next-btn {
+      position: absolute;
+      bottom: 30px;
+      background-color: rgba(58, 53, 53, 0.2);
+      color: #585757b2;
+      padding: 12px 28px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      /* font-size: 1.1em; */
+      border: 2px solid rgba(59, 57, 57, 0.4);
+      transition: all 0.3s ease;
+      opacity: 0;
+      animation: slideInRight 1s ease forwards;
+      animation-delay: 1.8s;
+    }
+
+    .next-btn:hover {
+      background-color:rgba(10, 102, 240, 0.5);
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+      font-size: 20px;
+      color:blue
+
+    }
+
+    li a{
+        text-decoration: none;
+        color: #0e0d0d;
+    }
+
+    li a:hover{
+        color: white;
+        font-size:40px;
+        font-weight: 2000px;
+    }
+    /* استجابة الموبايل */
+    @media (max-width: 600px) {
+      h1 { font-size: 1.6em; }
+      ul li { font-size: 1em; padding: 12px; }
+      .next-btn { font-size: 1em; bottom: 20px; }
+    }
+  </style>
+</head>
+<body>
+<body>
+  <h1>الأوراق المطلوبة لتقديم طلب الفحص المتنوع</h1>
+  <ul>
+    <li>طلب بشأن الفحص املتنوع مؤشر عليه من السيد رئيس النيابة</li>
+    <li>شهــادة مــن واقــع الجــدول ثابــت بها المــوافــقة علي الحكم</li>
+    <li><a href="">تحــمــيــل ن ــمـــوذج اإلقـــــرار و اسـتـيـفاءه علي وجه الدقة</a></li>
+    <li>خــمــــس صـــــــور بـــ طـــــاقــــــة شــــ خــــصـــــيـــــــ ة</li>
+  </ul>
+
+ 
+  <!-- الزر الذي يربط لصفحة index.html -->
+  <a href="index.html" class="next-btn">العودة إلى الصفحة الرئيسية</a>
+</body>
+</html>
