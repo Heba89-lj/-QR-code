@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <title>صفحة المعلومات</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Cairo", sans-serif;
+      background-image: url("khaligyoun71065-1.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      /* الخلفية تغطي الصفحة بالكامل */
+      background-position: center;
+      background-attachment: fixed;
+      /* الخلفية ثابتة */
+      height: 90vh;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      text-align: right;
+      padding: 30px;
+    }
+
+    h1 {
+      font-size: 40px;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .lines {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      animation: slideUp 1.2s ease;
+    }
+
+    .lines p {
+      font-size: 25px;
+      margin: 0;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+      cursor: default;
+    }
+
+    /* السطر الثالث (اللينك) */
+    .lines p:nth-child(3) {
+      font-weight: bold;
+      text-decoration: underline;
+      cursor: pointer;
+      color: #ffe600;
+    }
+
+    .lines p:nth-child(3):hover {
+      color: #fff700;
+      transform: scale(1.05);
+      transition: 0.3s;
+    }
+
+    /* حركة السطور */
+    @keyframes slideUp {
+      from {
+        transform: translateY(40px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* زر العودة */
+    .next-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid white;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.3s;
+      text-decoration: none;
+    }
+
+    .next-btn:hover {
+      background-color: rgba(255, 255, 255, 0.4);
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 28px;
+      }
+
+      .lines p {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div>
+    <h1>الاوراق المطلوبةلتقديم طلب الفحص المتنوع</h1>
+    <div class="lines">
+      <p>طلب بشأن الفحص المتنوع مؤشر عليه من السيد رئيس النيابة</p>
+      <p>شهادة من واقع الجدول ثابت بها الموافقة على الحكم</p>
+      <p id="linkLine">تحميل نموذج الاقرار واستيفاءه على وجه الدقة</p>
+      <p>خمس صور بطاقة شخصية</p>
+    </div>
+  </div>
+  <!-- 🔙 زر العودة -->
+  <a href="index.html" class="next-btn">العودة إلى الصفحة الرئيسية</a>
+
+
+
+  <script>
+    // عند الضغط على السطر الثالث
+    document.getElementById("linkLine").addEventListener("click", function () {
+      window.open("https://example.com", "_blank"); // 🔗 غيّري اللينك هنا
+    });
+  </script>
+
+</body>
+
+</html>
