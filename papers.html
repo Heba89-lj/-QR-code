@@ -85,11 +85,11 @@ background-attachment: scroll;
     ul li:nth-child(4) { animation-delay: 1.4s; }
 
     /* عند المرور */
-    ul li:hover {
+    /* ul li:hover {
       transform: translateY(-5px);
       background-color: rgba(0, 0, 0, 0.6);
       color: #fff;
-    }
+    } */
 
     /* 🔹 الزر في الأسفل */
     .next-btn {
@@ -122,10 +122,18 @@ background-attachment: scroll;
       color: #000;
     }
 
-    li a:hover {
+    /* li a:hover {
       color: #fff;
       font-size: 1.3em;
-    }
+    } */
+
+    ul li:hover,
+ul li a:hover {
+  transform: translateY(-5px);
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 1.3em;
+}
 
     /* 📱 استجابة الموبايل */
     @media (max-width: 600px) {
@@ -173,6 +181,7 @@ background-attachment: scroll;
   <a href="index.html" class="next-btn">العودة إلى الصفحة الرئيسية</a>
 </body>
 </html>
+
 
 
 
