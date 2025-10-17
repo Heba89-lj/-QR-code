@@ -1,6 +1,7 @@
-const CACHE_NAME = 'niaba-cache-v2';
+const CACHE_NAME = 'niaba-cache-v3';
 const urlsToCache = [
   './index.html',
+  './search.html',
   './images.jpg',
   './manifest.json'
 ];
@@ -30,3 +31,4 @@ self.addEventListener('activate', event => {
     })
   );
 });
+
