@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="ar">
 
 <head>
@@ -86,6 +86,111 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
 
 
 
+</body>
+
+
+</html> -->
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="UTF-8">
+  <title>الاستفسار عن الفحص</title>
+  <style>
+    body {
+      font-family: "Cairo", sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    input {
+      padding: 8px;
+      margin: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>الاستفسار عن الفحص</h1>
+  <input id="number" placeholder="رقم الفحص">
+  <input id="year" placeholder="السنة">
+  <button id="searchBtn">بحث</button>
+  <div id="result" style="margin-top:20px; font-weight:bold;"></div>
+
+  <script>
+    async function search(number, year) {
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = "";
+      resultDiv.textContent = 'جارٍ البحث...';
+
+      try {
+        const res = await fetch(`/api/search?number=${encodeURIComponent(number)}&year=${encodeURIComponent(year)}`);
+
+        if (!res.ok) {
+          const text = await res.text();
+          console.error("❌ خطأ من السيرفر:", text);
+          resultDiv.textContent = `حدث خطأ في السيرفر (${res.status}): ${text}`;
+          return;
+        }
+
+        const data = await res.json();
+
+        if (data.success) {
+          const r = data.result || {};
+          resultDiv.innerHTML = `
+            <table style="margin:0 auto; text-align:right; border-collapse: collapse;">
+              <tr><th style="padding:6px 12px;">رقم الفحص</th><td>${r.number || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">السنة</th><td>${r.year || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">رقم القضية</th><td>${r.caseNumber || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">اسم مقدم الطلب</th><td>${r.applicant || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">حالة الطلب</th><td>${r.status || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">التأشيرات</th><td>${r.visa || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">ملاحظات</th><td>${r.notes || "-"}</td></tr>
+            </table>
+          `;
+        } else {
+          resultDiv.textContent = data.message || 'لم يتم العثور على بيانات لهذا الفحص.';
+        }
+      } catch (err) {
+        console.error("⚠️ خطأ في الاتصال:", err);
+        resultDiv.textContent = 'حدث خطأ فى الاتصال بالسيرفر.';
+      }
+    }
+
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const number = document.getElementById('number').value.trim();
+      const year = document.getElementById('year').value.trim();
+      if (!number || !year) {
+        document.getElementById('result').textContent = 'من فضلك أدخل رقم الفحص والسنة.';
+        return;
+      }
+      search(number, year);
+    });
+
+    // ✅ تشغيل البحث تلقائيًا لو القيم في الـ URL
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const number = params.get('number');
+      const year = params.get('year');
+      if (number && year) {
+        document.getElementById('number').value = number;
+        document.getElementById('year').value = year;
+        search(number, year);
+      }
+    });
+  </script>
 </body>
 
 </html>
