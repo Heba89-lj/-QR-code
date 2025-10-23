@@ -28,91 +28,8 @@
     }
   </style>
 </head>
-  <!-- <body>
-  <h1>الاستفسار عن الفحص</h1>
-  <input id="number" placeholder="رقم الفحص">
-  <input id="year" placeholder="السنة">
-  <input id="nationalId" placeholder="الرقم القومي (اختياري)">
-  <button id="searchBtn">بحث</button>
-  <div id="result" style="margin-top:20px; font-weight:bold;"></div>
 
-  <script>
-    // تحويل الأرقام العربية إلى إنجليزية
-    function arabicToEnglishNumbers(str) {
-      return str.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
-    }
-
-    async function search(number, year, nationalId) {
-      const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = "";
-      resultDiv.textContent = 'جارٍ البحث...';
-
-      try {
-        const res = await fetch(`/api/search?number=${encodeURIComponent(number)}&year=${encodeURIComponent(year)}&nationalId=${encodeURIComponent(nationalId)}`);
-
-        if (!res.ok) {
-          const text = await res.text();
-          console.error("❌ خطأ من السيرفر:", text);
-          resultDiv.textContent = `حدث خطأ في السيرفر (${res.status}): ${text}`;
-          return;
-        }
-
-        const data = await res.json();
-
-        if (data.success) {
-          const r = data.result || {};
-          resultDiv.innerHTML = `
-            <table style="margin:0 auto; text-align:right; border-collapse: collapse;">
-              <tr><th style="padding:6px 12px;">رقم الفحص</th><td>${r.number || "-"}</td></tr>
-              <tr><th style="padding:6px 12px;">السنة</th><td>${r.year || "-"}</td></tr>
-              <tr><th style="padding:6px 12px;">رقم القضية</th><td>${r.caseNumber || "-"}</td></tr>
-              <tr><th style="padding:6px 12px;">اسم مقدم الطلب</th><td>${r.applicant || "-"}</td></tr>
-              <tr><th style="padding:6px 12px;">حالة الطلب</th><td>${r.status || "-"}</td></tr>
-              <tr><th style="padding:6px 12px;">التأشيرات</th><td>${r.visa || "-"}</td></tr>
-              <tr><th style="padding:6px 12px;">ملاحظات</th><td>${r.notes || "-"}</td></tr>
-              <tr><th style="padding:6px 12px;">رقم قومي</th><td>${r.nationalId || "-"}</td></tr>
-            </table>
-          `;
-        } else {
-          resultDiv.textContent = data.message || 'لم يتم العثور على بيانات لهذا الفحص.';
-        }
-      } catch (err) {
-        console.error("⚠️ خطأ في الاتصال:", err);
-        resultDiv.textContent = 'حدث خطأ فى الاتصال بالسيرفر.';
-      }
-    }
-
-    document.getElementById('searchBtn').addEventListener('click', () => {
-      // ✅ تحويل الأرقام العربية للإنجليزية قبل البحث
-      const number = arabicToEnglishNumbers(document.getElementById('number').value.trim());
-      const year = arabicToEnglishNumbers(document.getElementById('year').value.trim());
-      const nationalId = arabicToEnglishNumbers(document.getElementById('nationalId').value.trim());
-
-      if (!number || !year) {
-        document.getElementById('result').textContent = 'من فضلك أدخل رقم الفحص والسنة.';
-        return;
-      }
-
-      search(number, year, nationalId);
-    });
-
-    // تشغيل البحث تلقائيًا لو القيم في الـ URL
-    window.addEventListener('DOMContentLoaded', () => {
-      const params = new URLSearchParams(window.location.search);
-      const number = arabicToEnglishNumbers(params.get('number') || '');
-      const year = arabicToEnglishNumbers(params.get('year') || '');
-      const nationalId = arabicToEnglishNumbers(params.get('nationalId') || '');
-      if (number && year) {
-        document.getElementById('number').value = number;
-        document.getElementById('year').value = year;
-        document.getElementById('nationalId').value = nationalId;
-        search(number, year, nationalId);
-      }
-    });
-  </script>
-</body> -->
-
-<body>
+<!-- <body>
   <h1>الاستفسار عن الفحص</h1>
   <input id="number" placeholder="رقم الفحص">
   <input id="year" placeholder="السنة">
@@ -198,9 +115,105 @@
       }
     });
   </script>
+</body> -->
+
+
+  <body>
+  <h1>الاستفسار عن الفحص</h1>
+  <input id="number" placeholder="رقم الفحص">
+  <input id="year" placeholder="السنة">
+  <input id="nationalId" placeholder="الرقم القومي (14 رقم)" maxlength="14" required>
+  <button id="searchBtn">بحث</button>
+  <div id="result" style="margin-top:20px; font-weight:bold;"></div>
+
+  <script>
+    // تحويل الأرقام العربية إلى إنجليزية
+    function arabicToEnglishNumbers(str) {
+      return str.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+    }
+
+    async function search(number, year, nationalId) {
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = "";
+      resultDiv.textContent = 'جارٍ البحث...';
+
+      try {
+        const res = await fetch(`/api/search?number=${encodeURIComponent(number)}&year=${encodeURIComponent(year)}&nationalId=${encodeURIComponent(nationalId)}`);
+
+        if (!res.ok) {
+          const text = await res.text();
+          console.error("❌ خطأ من السيرفر:", text);
+          resultDiv.textContent = `حدث خطأ في السيرفر (${res.status}): ${text}`;
+          return;
+        }
+
+        const data = await res.json();
+
+        if (data.success) {
+          const r = data.result || {};
+          // ✅ لا نعرض الرقم القومي في النتيجة
+          resultDiv.innerHTML = `
+            <table style="margin:0 auto; text-align:right; border-collapse: collapse;">
+              <tr><th style="padding:6px 12px;">رقم الفحص</th><td>${r.number || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">السنة</th><td>${r.year || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">رقم القضية</th><td>${r.caseNumber || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">اسم مقدم الطلب</th><td>${r.applicant || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">حالة الطلب</th><td>${r.status || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">التأشيرات</th><td>${r.visa || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">ملاحظات</th><td>${r.notes || "-"}</td></tr>
+            </table>
+          `;
+        } else {
+          resultDiv.textContent = data.message || 'لم يتم العثور على بيانات لهذا الفحص.';
+        }
+      } catch (err) {
+        console.error("⚠️ خطأ في الاتصال:", err);
+        resultDiv.textContent = 'حدث خطأ فى الاتصال بالسيرفر.';
+      }
+    }
+
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const number = arabicToEnglishNumbers(document.getElementById('number').value.trim());
+      const year = arabicToEnglishNumbers(document.getElementById('year').value.trim());
+      const nationalId = arabicToEnglishNumbers(document.getElementById('nationalId').value.trim());
+
+      if (!number || !year) {
+        document.getElementById('result').textContent = 'من فضلك أدخل رقم الفحص والسنة.';
+        return;
+      }
+
+      // ✅ تحقق إجباري للرقم القومي وطوله 14 رقم
+      if (!nationalId) {
+        document.getElementById('result').textContent = 'الرقم القومي إجباري.';
+        return;
+      }
+
+      if (nationalId.length !== 14) {
+        document.getElementById('result').textContent = 'الرقم القومي يجب أن يكون 14 رقم فقط.';
+        return;
+      }
+
+      search(number, year, nationalId);
+    });
+
+    // تشغيل البحث تلقائيًا لو القيم في الـ URL
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const number = arabicToEnglishNumbers(params.get('number') || '');
+      const year = arabicToEnglishNumbers(params.get('year') || '');
+      const nationalId = arabicToEnglishNumbers(params.get('nationalId') || '');
+      if (number && year && nationalId) {
+        document.getElementById('number').value = number;
+        document.getElementById('year').value = year;
+        document.getElementById('nationalId').value = nationalId;
+        search(number, year, nationalId);
+      }
+    });
+  </script>
 </body>
 
 </html>
+
 
 
 
