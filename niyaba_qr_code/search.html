@@ -307,7 +307,7 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
   <div id="result" style="margin-top:20px; font-weight:bold;"></div>
 
   <script>
-    // تحويل الأرقام العربية إلى إنجليزية لمطابقة دقيقة
+    // تحويل الأرقام العربية إلى إنجليزية
     function arabicToEnglishNumbers(str) {
       return str.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
     }
@@ -340,7 +340,7 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
               <tr><th style="padding:6px 12px;">حالة الطلب</th><td>${r.status || "-"}</td></tr>
               <tr><th style="padding:6px 12px;">التأشيرات</th><td>${r.visa || "-"}</td></tr>
               <tr><th style="padding:6px 12px;">ملاحظات</th><td>${r.notes || "-"}</td></tr>
-              <tr><th style="padding:6px 12px;">رقم قومي</th><td>${r.nationalId || "-"}</td></tr> <!-- العمود الإضافي -->
+              <tr><th style="padding:6px 12px;">رقم قومي</th><td>${r.nationalId || "-"}</td></tr>
             </table>
           `;
         } else {
@@ -353,13 +353,16 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
     }
 
     document.getElementById('searchBtn').addEventListener('click', () => {
+      // ✅ تحويل الأرقام العربية للإنجليزية قبل البحث
       const number = arabicToEnglishNumbers(document.getElementById('number').value.trim());
-      const year = document.getElementById('year').value.trim();
+      const year = arabicToEnglishNumbers(document.getElementById('year').value.trim());
       const nationalId = arabicToEnglishNumbers(document.getElementById('nationalId').value.trim());
+
       if (!number || !year) {
         document.getElementById('result').textContent = 'من فضلك أدخل رقم الفحص والسنة.';
         return;
       }
+
       search(number, year, nationalId);
     });
 
@@ -367,7 +370,7 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
     window.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
       const number = arabicToEnglishNumbers(params.get('number') || '');
-      const year = params.get('year') || '';
+      const year = arabicToEnglishNumbers(params.get('year') || '');
       const nationalId = arabicToEnglishNumbers(params.get('nationalId') || '');
       if (number && year) {
         document.getElementById('number').value = number;
@@ -379,7 +382,9 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
   </script>
 </body>
 
+
 </html>
+
 
 
 
