@@ -218,7 +218,7 @@
 </body> -->
 
 <!-- ده عيبه تجاهل الارقام عربى او انجليزى -->
-<body>
+<!-- <body>
   <h1>الاستفسار عن الفحص</h1>
 
   <input id="number" placeholder="رقم الفحص">
@@ -305,10 +305,81 @@
       }
     });
   </script>
+</body> -->
+
+<body>
+  <h1>الاستفسار عن الفحص</h1>
+
+  <input id="number" placeholder="رقم الفحص">
+  <input id="year" placeholder="السنة">
+  <input id="nationalId" placeholder="الرقم القومي" maxlength="14">
+
+  <button id="searchBtn">بحث</button>
+
+  <div id="result" style="margin-top:20px; font-weight:bold;"></div>
+
+  <script>
+    // تحويل الأرقام العربية إلى إنجليزية
+    function normalize(str = "") {
+      return str.replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).trim();
+    }
+
+    async function search(number, year, nationalId) {
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "جارٍ البحث...";
+
+      try {
+        const res = await fetch(
+          `/api/search?number=${encodeURIComponent(number)}&year=${encodeURIComponent(year)}&nationalId=${encodeURIComponent(nationalId)}`
+        );
+
+        const data = await res.json();
+
+        if (data.success) {
+          const r = data.result;
+          resultDiv.innerHTML = `
+            <table style="margin:0 auto; text-align:right; border-collapse: collapse;">
+              <tr><th style="padding:6px 12px;">رقم الفحص</th><td>${r.number || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">السنة</th><td>${r.year || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">رقم القضية</th><td>${r.caseNumber || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">اسم مقدم الطلب</th><td>${r.applicant || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">حالة الطلب</th><td>${r.status || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">التأشيرات</th><td>${r.visa || "-"}</td></tr>
+              <tr><th style="padding:6px 12px;">ملاحظات</th><td>${r.notes || "-"}</td></tr>
+            </table>`;
+        } else {
+          resultDiv.textContent = data.message || "لم يتم العثور على بيانات لهذا الفحص.";
+        }
+      } catch (err) {
+        console.error(err);
+        resultDiv.textContent = "حدث خطأ في الاتصال بالسيرفر.";
+      }
+    }
+
+    document.getElementById("searchBtn").addEventListener("click", () => {
+      const number = normalize(document.getElementById("number").value.trim());
+      const year = normalize(document.getElementById("year").value.trim());
+      const nationalId = normalize(document.getElementById("nationalId").value.trim());
+
+      if (!number || !year || !nationalId) {
+        document.getElementById("result").textContent =
+          "من فضلك أدخل رقم الفحص والسنة والرقم القومي.";
+        return;
+      }
+
+      if (nationalId.length !== 14) {
+        document.getElementById("result").textContent =
+          "يجب أن يتكون الرقم القومي من 14 رقمًا بالضبط.";
+        return;
+      }
+
+      search(number, year, nationalId);
+    });
+  </script>
 </body>
 
-
 </html>
+
 
 
 
