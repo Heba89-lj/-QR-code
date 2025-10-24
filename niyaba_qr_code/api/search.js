@@ -129,13 +129,14 @@ export default async function handler(req, res) {
 
     const rows = data.values?.slice(1) || [];
 
-    // ✅ البحث في نفس الصف عن رقم الفحص والسنة والرقم القومي
-    const match = rows.find(
-      (r) =>
-        normalize(r[0]) === num && // رقم الفحص
-        normalize(r[1]) === yr && // السنة
-        normalize(r[2]) === nid // الرقم القومي
-    );
+  // ✅ البحث في نفس الصف عن رقم الفحص والسنة والرقم القومي
+const match = rows.find(
+  (r) =>
+    normalize(r[0]) === num && // رقم الفحص
+    normalize(r[1]) === yr && // السنة
+    normalize(r[2]).includes(nid) // الرقم القومي (حتى لو أكتر من رقم في الخلية)
+);
+
 
     if (match) {
       return res.status(200).json({
@@ -165,4 +166,5 @@ export default async function handler(req, res) {
     });
   }
 }
+
 
