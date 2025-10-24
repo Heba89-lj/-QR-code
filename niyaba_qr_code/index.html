@@ -302,6 +302,28 @@ if ('serviceWorker' in navigator) {
       padding: 15px;
       font-size: 0.9rem;
     }
+.center-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px; /* مسافة بسيطة قبل الأزرار */
+}
+
+.center-image img {
+  width: 200px; /* حجم مناسب */
+  max-width: 70%; /* ما يزيدش عن عرض الشاشة */
+  height: auto;
+  border-radius: 10px; /* لو حابة الزوايا ناعمة */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* ظل بسيط */
+}
+
+/* للموبايل */
+@media (max-width: 600px) {
+  .center-image img {
+    width: 150px;
+    max-width: 80%;
+  }
+}
 
     /* 📱 استجابة الموبايل */
     @media (max-width: 768px) {
@@ -341,6 +363,9 @@ if ('serviceWorker' in navigator) {
   </header>
 
   <main>
+    <div class="center-image">
+    <img src="النيابة.العامة.jpg" alt="شعار النيابة العامة">
+  </div>
     <div class="buttons-container">
       <a href="papers.html" target="_blank">الأوراق المطلوبة</a>
       <a href="https://drive.google.com/file/d/1KxYH031IyxJrIG_Fh5HTMd_SbVLARTLQ/view" target="_blank">الاستعلامات</a>
@@ -368,6 +393,7 @@ if ('serviceWorker' in navigator) {
 </body>
 
 </html>
+
 
 
 
