@@ -263,7 +263,6 @@
 </head>
 
 <body>
-  <div id="header"></div>
 
   <h1>الاستفسار عن الفحص</h1>
 
@@ -342,12 +341,8 @@
       search(number, year, nationalId);
     });
 
-      fetch('header.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('header').innerHTML = data;
-    })
-    .catch(error => console.error('خطأ في تحميل الهيدر:', error))
+
   </script>
 </body>
 </html>
+
