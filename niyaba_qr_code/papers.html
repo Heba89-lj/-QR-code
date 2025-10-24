@@ -210,7 +210,6 @@ ul li:hover i {
 </head>
 
 <body>
-  <div id="header"></div>
 
   <h1>الأوراق المطلوبة لتقديم طلب الفحص المتنوع</h1>
   <ul>
@@ -226,14 +225,8 @@ ul li:hover i {
 
   <!-- 🔹 زر الرجوع -->
   <a href="index.html" class="next-btn">العودة إلى الصفحة الرئيسية</a>
-  <script>
-  fetch('header.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('header').innerHTML = data;
-    })
-    .catch(error => console.error('خطأ في تحميل الهيدر:', error));
-</script>
+ 
 </body>
+
 
 </html>
