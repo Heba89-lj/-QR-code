@@ -129,7 +129,6 @@
 </head>
 
 <body>
-    <div id="header"></div>
 
     <div class="container" id="content">
         <h1>إقــــــــــــــرار</h1>
@@ -212,17 +211,13 @@
             btnsContainer.style.display = "flex";
         });
     });
-     fetch('header.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('header').innerHTML = data;
-    })
-    .catch(error => console.error('خطأ في تحميل الهيدر:', error));
+   
 </script>
 
 </body>
 
 </html>
+
 
 
 
