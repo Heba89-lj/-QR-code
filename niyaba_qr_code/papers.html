@@ -210,7 +210,8 @@ ul li:hover i {
 </head>
 
 <body>
-
+<!-- 🟢 تحميل الهيدر الخارجي -->
+  <div id="header-container"></div>
   <h1>الأوراق المطلوبة لتقديم طلب الفحص المتنوع</h1>
   <ul>
     <li>طلب بشأن الفحص المتنوع مؤشر عليه من السيد رئيس النيابة</li>
@@ -225,9 +226,17 @@ ul li:hover i {
 
  
   <a href="index.html" class="next-btn">العودة إلى الصفحة الرئيسية</a>
- 
+   <script>
+    // تحميل الهيدر من ملف خارجي
+    fetch("header.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("header-container").innerHTML = data;
+      });
+  </script>
 </body>
 
 
 </html>
+
 
