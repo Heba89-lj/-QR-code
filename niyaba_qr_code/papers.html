@@ -240,7 +240,7 @@ ul li:hover i {
   <!-- تحميل الخط -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lateef:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lateef:wght@300;400;600&display=swap" rel="stylesheet">
 
   <!-- أيقونات -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -251,22 +251,20 @@ ul li:hover i {
     /* 🌈 إعدادات عامة */
     body {
       margin: 0;
-      padding: 120px 0 80px 0; /* ✅ مسافة من الأعلى للهيدر الثابت */
+      padding: 80px 0 60px 0; /* ✅ مسافة للهيدر الثابت */
       font-family: "Lateef", "Cairo", sans-serif;
       background-image: url("khaligyoun71065-1.jpg");
       background-repeat: no-repeat;
-      background-size: 100% 100%;
-      background-attachment: scroll;
+      background-size: cover;
       background-position: center;
       color: #fff;
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
-      justify-content: center;
+      align-items: center;
+      justify-content: flex-start;
       min-height: 100vh;
       text-align: right;
-      overflow: hidden;
-      position: relative;
+      overflow-x: hidden; /* ✅ منع المسافة الجانبية */
     }
 
     /* ✨ حركة الدخول */
@@ -277,20 +275,18 @@ ul li:hover i {
 
     /* 🔹 العنوان */
     h1 {
-      font-size: 2.8em;
-      margin-right: 30px;
-      margin-top: -40px;
+      font-size: 2.6em;
+      margin: 20px 0 10px 0;
       text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-      opacity: 0;
       animation: slideInUp 1s ease forwards;
     }
 
-    /* 🔹 قائمة السطور */
+    /* 🔹 قائمة الأوراق */
     ul {
       list-style: none;
-      padding: 0 40px 0 0;
+      padding: 0 20px;
       margin-top: 10px;
-      width: 85%;
+      width: 90%;
       text-align: right;
     }
 
@@ -300,29 +296,28 @@ ul li:hover i {
       padding: 15px;
       border-radius: 15px;
       font-size: 1.4em;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      opacity: 0;
-      animation: slideInUp 0.8s ease forwards;
       color: #000;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      animation: slideInUp 0.8s ease forwards;
     }
 
     ul li a {
       display: block;
       text-decoration: none;
       color: #000;
-      width: 100%;
-      height: 100%;
     }
 
-    /* أيقونة التحميل */
     .download-link i {
       margin-left: 8px;
       color: #000;
       transition: color 0.3s ease;
     }
 
-    ul li:hover i { color: #fff; }
+    ul li:hover, ul li a:hover {
+      transform: translateY(-5px);
+      color: #fff;
+      font-weight: bold;
+    }
 
     /* 🔹 زر الرجوع */
     .next-btn {
@@ -338,36 +333,25 @@ ul li:hover i {
       font-weight: bold;
       border: 2px solid rgba(255, 255, 255, 0.4);
       transition: all 0.3s ease;
-      opacity: 0;
       animation: slideInUp 1s ease forwards;
-      animation-delay: 1.8s;
+      animation-delay: 1.5s;
     }
 
     .next-btn:hover {
       background-color: rgba(255, 255, 255, 0.3);
-      transform: scale(1.05);
-      box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
       color: #00f;
+      transform: scale(1.05);
     }
 
-    ul li:hover, ul li a:hover {
-      transform: translateY(-5px);
-      color: #fff;
-      font-size: 1.3em;
-    }
-
-    /* 📱 استجابة الموبايل */
+    /* 📱 تصميم متجاوب */
     @media (max-width: 600px) {
       body {
-        background-attachment: scroll;
-        background-size: cover;
-        align-items: center;
+        padding-top: 100px;
         text-align: center;
-        min-height: 80vh;
       }
 
-      h1 { font-size: 1.8em; margin: 0 10px 10px 10px; }
-      ul { padding: 0 15px; width: 95%; }
+      h1 { font-size: 1.8em; margin: 0 10px 10px; }
+      ul { width: 95%; }
       ul li { font-size: 1.1em; padding: 12px; }
       .next-btn { font-size: 1em; bottom: 20px; }
     }
@@ -376,7 +360,7 @@ ul li:hover i {
 
 <body>
 
-  <!-- 🟢 هنا الهيدر الثابت -->
+  <!-- ✅ الهيدر الثابت -->
   <div id="header-container"></div>
 
   <h1>الأوراق المطلوبة لتقديم طلب الفحص المتنوع</h1>
@@ -393,13 +377,15 @@ ul li:hover i {
 
   <a href="index.html" class="next-btn">العودة إلى الصفحة الرئيسية</a>
 
-  <!-- ✅ تحميل الهيدر من ملف منفصل -->
+  <!-- 📦 تحميل الهيدر من ملف منفصل -->
   <script>
     fetch("header.html")
       .then(response => response.text())
       .then(data => {
         document.getElementById("header-container").innerHTML = data;
+        document.querySelector("header").style.margin = "0"; // ✅ إزالة أي فراغ خارجي
       });
   </script>
+
 </body>
 </html>
