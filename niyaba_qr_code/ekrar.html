@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
 <head>
@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إقرار</title>
 
-    <!-- تحميل الخط -->
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
 
@@ -157,7 +157,7 @@
 
     </div>
 
-    <!-- مكتبة html2pdf لتحويل الصفحة لـ PDF -->
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script>
@@ -234,3 +234,80 @@
 
 
 
+ -->
+<script>
+const downloadBtn = document.getElementById("downloadBtn");
+const btnsContainer = document.querySelector('.btns'); 
+
+downloadBtn.addEventListener("click", () => {
+  const inputs = document.querySelectorAll("input, textarea");
+  let allFilled = true;
+
+  // ✅ التحقق من أن جميع الحقول ممتلئة
+  inputs.forEach(input => {
+    if (input.value.trim() === "") {
+      input.style.border = "2px solid red";
+      allFilled = false;
+    } else {
+      input.style.border = "1px solid #ccc";
+    }
+  });
+
+  if (!allFilled) {
+    alert("من فضلك املأ جميع الخانات قبل التحميل 📋");
+    return;
+  }
+
+  // ✅ إخفاء الأزرار قبل التحويل
+  btnsContainer.style.display = "none";
+
+  // ✅ تحويل الـ input إلى span بحيث الاتجاه يبقى RTL
+  const replacedInputs = [];
+  inputs.forEach(input => {
+    const span = document.createElement("span");
+    span.textContent = input.value || input.placeholder;
+    span.style.display = "inline-block";
+    span.style.borderBottom = "1px solid #444";
+    span.style.width = "100%";
+    span.style.direction = "rtl";
+    span.style.textAlign = "right";
+    span.style.padding = "6px 0";
+    span.style.fontSize = "17px";
+    span.style.color = "#000";
+    span.classList.add("pdf-text");
+
+    // حفظ العنصر الأصلي عشان نرجعه بعدين
+    replacedInputs.push({ parent: input.parentNode, original: input, newSpan: span });
+
+    input.parentNode.replaceChild(span, input);
+  });
+
+  // ✅ تحويل الصفحة إلى PDF
+  const content = document.getElementById("content");
+  const options = {
+    margin: [0, 0, 0, 0],
+    filename: 'إقرار.pdf',
+    image: { type: 'jpeg', quality: 1 },
+    html2canvas: {
+      scale: 3,
+      useCORS: true,
+      scrollY: 0
+    },
+    jsPDF: {
+      unit: 'px',
+      format: [content.scrollWidth, content.scrollHeight],
+      orientation: 'portrait'
+    }
+  };
+
+  html2pdf().set(options).from(content).save().then(() => {
+    // ✅ بعد الحفظ نرجّع الـ inputs تاني
+    replacedInputs.forEach(item => {
+      item.parent.replaceChild(item.original, item.newSpan);
+    });
+
+    // ✅ نعرض الأزرار تاني
+    btnsContainer.style.display = "flex";
+  });
+});
+</script>
