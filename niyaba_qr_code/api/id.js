@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     const url = 'https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1?alt=json&key=${API_KEY}';
 
     const response = await fetch(url);
-    const json = await response.text();
+    const json = await response.json();
 
     const rows = json.values || [];
     const results = rows.filter(r => r[2]?.trim() === nationalId.trim()); // العمود الثالث = الرقم القومي
@@ -41,3 +41,4 @@ export default async function handler(req, res) {
   }
 
 }
+
