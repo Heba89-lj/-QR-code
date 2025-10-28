@@ -141,7 +141,7 @@
       document.getElementById("result").innerHTML = "جارٍ البحث...";
 
       try {
-        const response = await fetch('/api/search?nationalId=${nationalId}');
+        const response = await fetch('/api/id?nationalId=${nationalId}');
         const data = await response.json();
 
         if (data.success) {
@@ -168,3 +168,4 @@
 </body>
 
 </html>
+
