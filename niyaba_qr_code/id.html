@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>الاستعلام عن رقم الفحص</title>
+  <style>
+    body {
+      font-family: "Cairo", sans-serif;
+      background: linear-gradient(to bottom right, #0a1f44, #1e3c72, #2a5298);
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 40px 10px;
+      min-height: 100vh;
+    }
+
+    h1 { margin-bottom: 30px; }
+
+    input {
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      width: 250px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 25px;
+      border: none;
+      border-radius: 6px;
+      background: #6ca0dc;
+      color: white;
+      font-size: 16px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    button:hover { background: #8cbff5; }
+
+    table {
+      margin: 30px auto;
+      width: 90%;
+      max-width: 700px;
+      background: white;
+      border-radius: 10px;
+      border-collapse: collapse;
+      overflow: hidden;
+      color: black;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+
+    th { background: #3c78b4; color: white; }
+
+    @media (max-width: 600px) {
+      table { font-size: 14px; }
+      input, button { width: 80%; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>الاستعلام عن رقم الفحص</h1>
+  <input type="text" id="nationalId" placeholder="أدخل الرقم القومي" maxlength="14" inputmode="numeric" />
+  <button onclick="searchData()">بحث</button>
+
+  <p id="message"></p>
+
+  <table id="resultTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>رقم الفحص</th>
+        <th>السنة</th>
+        <th>الاسم</th>
+      </tr>
+    </thead>
+    <tbody id="resultBody"></tbody>
+  </table>
+
+  <script>
+    async function searchData() {
+      const nationalId = document.getElementById("nationalId").value.trim();
+      const message = document.getElementById("message");
+      const table = document.getElementById("resultTable");
+      const body = document.getElementById("resultBody");
+
+      if (nationalId.length !== 14) {
+        message.textContent = "الرقم القومي يجب أن يكون 14 رقمًا فقط.";
+        table.style.display = "none";
+        return;
+      }
+
+      message.textContent = "جارٍ البحث...";
+      body.innerHTML = "";
+      table.style.display = "none";
+
+      try {
+        const res = await fetch('/api/search?nationalId=${nationalId}');
+        const data = await res.json();
+
+        if (!data.success) {
+          message.textContent = data.message;
+          return;
+        }
+
+        message.textContent = "";
+        table.style.display = "table";
+
+        data.data.forEach(item => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${item.testNumber}</td>
+            <td>${item.year}</td>
+            <td>${item.name}</td>
+          `;
+          body.appendChild(row);
+        });
+      } catch (err) {
+        console.error(err);
+        message.textContent = "حدث خطأ أثناء البحث.";
+      }
+    }
+  </script>
+
+</body>
+</html>
