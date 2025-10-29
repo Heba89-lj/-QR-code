@@ -55,11 +55,11 @@ export default async function handler(req, res) {
       });
     }
 
-    // ترتيب الأعمدة في الشيت: رقم الفحص | السنة | الرقم القومي | رقم القضية | اسم مقدم الطلب | حالة الفحص | ما تم | ملاحظات
+   // ترتيب الأعمدة في الشيت: رقم الفحص | السنة | الرقم القومي | رقم القضية | اسم مقدم الطلب | حالة الفحص | ما تم | ملاحظات
     const formatted = results.map(r => ({
-      testNumber: r[0],
-      year: r[1],
-      name: r[4],
+      testNumber: r[0] || "",
+      year: r[1] || "",
+      name: r[4] || "",
     }));
 
     return res.status(200).json({ success: true, data: formatted });
@@ -73,3 +73,4 @@ export default async function handler(req, res) {
     });
   }
 }
+
