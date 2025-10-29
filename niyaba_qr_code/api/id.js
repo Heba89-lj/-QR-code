@@ -1,65 +1,75 @@
 export default async function handler(req, res) {
-  console.log("✅ Function started"); // للتأكد إن الدالة اشتغلت
+  if (req.method !== "GET") {
+    return res.status(405).json({ message: "Method Not Allowed" });
+  }
+
+  const { nationalId } = req.query;
+
+  if (!nationalId) {
+    return res
+      .status(400)
+      .json({ success: false, message: "من فضلك أدخل الرقم القومي" });
+  }
+
+  // ✅ تحويل الأرقام العربية إلى إنجليزية
+  const normalize = (str = "") =>
+    str.replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).trim();
+
+  const nid = normalize(nationalId);
+
+  const sheetId = process.env.SHEET_ID;
+  const apiKey = process.env.GOOGLE_API_KEY;
 
   try {
-    const { nationalId } = req.query;
-    console.log("📩 Received nationalId:", nationalId);
-
-    if (!nationalId) {
-      console.log("⚠️ Missing nationalId");
-      return res.status(400).json({ success: false, message: "من فضلك أدخل الرقم القومي." });
-    }
-
-    const SHEET_ID = process.env.SHEET_ID;
-    const API_KEY = process.env.API_KEY;
-
-    console.log("🧩 SHEET_ID:", SHEET_ID ? "Loaded ✅" : "❌ Missing");
-    console.log("🧩 API_KEY:", API_KEY ? "Loaded ✅" : "❌ Missing");
-
-    if (!SHEET_ID || !API_KEY) {
-      throw new Error("Missing environment variables SHEET_ID or API_KEY");
-    }
-
-    const url = https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1?alt=json&key=${API_KEY};
-    console.log("🌐 Fetching URL:", url);
-
+    const url = https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1?key=${apiKey};
     const response = await fetch(url);
-    console.log("📡 Google Sheets status:", response.status);
+    const rawText = await response.text();
 
-    if (!response.ok) {
-      throw new Error(Google Sheets API returned ${response.status});
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch {
+      console.error("❌ خطأ في تحليل الرد من Google Sheets:", rawText);
+      return res.status(500).json({
+        success: false,
+        message: "رد غير صالح من Google Sheets",
+      });
     }
 
-    const data = await response.json();
-    console.log("📄 Sheets response keys:", Object.keys(data));
-
-    if (!data.values) {
-      throw new Error("No 'values' property found in Google Sheets response");
+    if (!response.ok || data.error) {
+      console.error("⚠️ Google Sheets API Error:", data.error);
+      return res.status(500).json({
+        success: false,
+        message: "خطأ في الوصول إلى Google Sheet",
+      });
     }
 
-    const rows = data.values;
-    console.log("🧾 Total rows fetched:", rows.length);
+    const rows = data.values?.slice(1) || [];
 
-    // نبحث عن الرقم القومي في العمود الثالث (index = 2)
-    const match = rows.find(row => row[2]?.trim() === nationalId.trim());
-    console.log("🔍 Match found:", !!match);
+    // ✅ البحث عن الصف الذي يحتوي الرقم القومي
+    const match = rows.find((r) => normalize(r[2]).includes(nid)); // العمود الثالث للرقم القومي
 
-    if (!match) {
-      console.log("🚫 No matching record found");
-      return res.status(404).json({ success: false, message: "لم يتم العثور على بيانات." });
+    if (match) {
+      return res.status(200).json({
+        success: true,
+        result: {
+          number: match[0], // رقم الفحص
+          year: match[1], // السنة
+          applicant: match[4], // اسم مقدم الطلب
+        },
+      });
+    } else {
+      return res.status(404).json({
+        success: false,
+        message: "لم يتم العثور على بيانات لهذا الرقم القومي",
+      });
     }
-
-    const formatted = {
-      testNumber: match[0],
-      year: match[1],
-      name: match[4],
-    };
-
-    console.log("✅ Formatted result:", formatted);
-
-    res.status(200).json({ success: true, data: formatted });
-  } catch (err) {
-    console.error("❌ Server Error:", err.message);
-    res.status(500).json({ success: false, message: err.message });
+  } catch (error) {
+    console.error("🔥 Error fetching Google Sheet:", error);
+    return res.status(500).json({
+      success: false,
+      message: "حدث خطأ في السيرفر",
+      error: error.message,
+    });
   }
 }
