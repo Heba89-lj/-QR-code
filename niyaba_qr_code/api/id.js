@@ -38,12 +38,15 @@ export default async function handler(req, res) {
       });
     }
 
-    if (!response.ok || data.error) {
-      return res.status(500).json({
-        success: false,
-        message: "خطأ في الوصول إلى Google Sheet",
-      });
-    }
+ if (!response.ok || data.error) {
+  console.error("❌ Google Sheets API error:", data.error || rawText);
+  return res.status(500).json({
+    success: false,
+    message: "خطأ في الوصول إلى Google Sheet",
+    details: data.error?.message || rawText,
+  });
+}
+
 
     const rows = data.values?.slice(1) || []; // تجاهل العنوان
     const results = rows.filter(r => normalize(r[2]) === nid); // العمود الثالث = الرقم القومي
@@ -73,4 +76,5 @@ export default async function handler(req, res) {
     });
   }
 }
+
 
