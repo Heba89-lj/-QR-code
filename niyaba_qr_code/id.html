@@ -251,6 +251,7 @@
 
       const res = await fetch(`/api/id?nationalId=${encodeURIComponent(nationalId)}`);
       const data = await res.json();
+console.log('Response data:', data);
 
       const resultDiv = document.getElementById('result');
       resultDiv.innerHTML = '';
@@ -259,6 +260,11 @@
         resultDiv.innerHTML = '<p>لا توجد نتائج لهذا الرقم القومي.</p>';
         return;
       }
+if (!Array.isArray(data)) {
+  console.error("Unexpected API response:", data);
+  document.getElementById('result').innerHTML = "<p>حدث خطأ في الاتصال بالخادم.</p>";
+  return;
+}
 
       let table = `<table>
         <tr><th>رقم الفحص</th><th>السنة</th><th>اسم مقدم الطلب</th></tr>`;
@@ -275,3 +281,4 @@
   </script>
 </body>
 </html>
+
