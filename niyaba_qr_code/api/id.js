@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   const apiKey = process.env.GOOGLE_API_KEY;
 
   try {
-    const url ='https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1?key=${apiKey}';
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1?key=${apiKey}`;
     const response = await fetch(url);
     const rawText = await response.text();
 
@@ -73,4 +73,3 @@ export default async function handler(req, res) {
     });
   }
 }
-
