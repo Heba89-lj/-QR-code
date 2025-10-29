@@ -234,41 +234,38 @@
     <div id="result"></div>
   </div>
 
-  <script>
-    function convertArabicNumbers(str) {
-      const arabicNums = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-      return str.replace(/[٠-٩]/g, d => arabicNums.indexOf(d));
+ <script>
+  function convertArabicNumbers(str) {
+    const arabicNums = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+    return str.replace(/[٠-٩]/g, d => arabicNums.indexOf(d)).trim();
+  }
+
+  async function search() {
+    const nationalIdInput = document.getElementById('nationalId').value.trim();
+    const nationalId = convertArabicNumbers(nationalIdInput);
+
+    if (!nationalId || nationalId.length !== 14) {
+      alert('من فضلك أدخل الرقم القومي المكون من 14 رقمًا فقط.');
+      return;
     }
 
-    async function search() {
-      const nationalIdInput = document.getElementById('nationalId').value.trim();
-      const nationalId = convertArabicNumbers(nationalIdInput);
-
-      if (!nationalId) {
-        alert('من فضلك أدخل الرقم القومي');
-        return;
-      }
-
+    try {
       const res = await fetch(`/api/id?nationalId=${encodeURIComponent(nationalId)}`);
       const data = await res.json();
-console.log('Response data:', data);
+      console.log('Response data:', data);
 
       const resultDiv = document.getElementById('result');
       resultDiv.innerHTML = '';
 
-      if (data.length === 0) {
-        resultDiv.innerHTML = '<p>لا توجد نتائج لهذا الرقم القومي.</p>';
+      // تحقق إن الاستجابة ناجحة والمصفوفة موجودة
+      if (!data.success || !Array.isArray(data.data) || data.data.length === 0) {
+        resultDiv.innerHTML = `<p>${data.message || "لا توجد نتائج لهذا الرقم القومي."}</p>`;
         return;
       }
-if (!Array.isArray(data)) {
-  console.error("Unexpected API response:", data);
-  document.getElementById('result').innerHTML = "<p>حدث خطأ في الاتصال بالخادم.</p>";
-  return;
-}
 
       let table = `<table>
         <tr><th>رقم الفحص</th><th>السنة</th><th>اسم مقدم الطلب</th></tr>`;
-      data.forEach(row => {
+      data.data.forEach(row => {
         table += `<tr>
           <td>${row.testNumber}</td>
           <td>${row.year}</td>
@@ -277,8 +274,18 @@ if (!Array.isArray(data)) {
       });
       table += '</table>';
       resultDiv.innerHTML = table;
+
+    } catch (err) {
+      console.error('Error fetching API:', err);
+      document.getElementById('result').innerHTML = "<p>حدث خطأ في الاتصال بالخادم.</p>";
     }
-  </script>
+  }
+
+  // ربط زر البحث
+  document.getElementById('searchBtn').addEventListener('click', search);
+</script>
+
 </body>
 </html>
+
 
