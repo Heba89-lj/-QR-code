@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -169,3 +169,109 @@
 
 </html>
 
+ -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الاستعلام عن رقم الفحص</title>
+  <style>
+    body {
+      font-family: "Cairo", sans-serif;
+      background: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 18px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      text-align: center;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 18px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>الاستعلام عن رقم الفحص</h2>
+    <input type="text" id="nationalId" placeholder="ادخل الرقم القومي">
+    <button onclick="search()">بحث</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function convertArabicNumbers(str) {
+      const arabicNums = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+      return str.replace(/[٠-٩]/g, d => arabicNums.indexOf(d));
+    }
+
+    async function search() {
+      const nationalIdInput = document.getElementById('nationalId').value.trim();
+      const nationalId = convertArabicNumbers(nationalIdInput);
+
+      if (!nationalId) {
+        alert('من فضلك أدخل الرقم القومي');
+        return;
+      }
+
+      const res = await fetch(`/api/id?nationalId=${encodeURIComponent(nationalId)}`);
+      const data = await res.json();
+
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '';
+
+      if (data.length === 0) {
+        resultDiv.innerHTML = '<p>لا توجد نتائج لهذا الرقم القومي.</p>';
+        return;
+      }
+
+      let table = `<table>
+        <tr><th>رقم الفحص</th><th>السنة</th><th>اسم مقدم الطلب</th></tr>`;
+      data.forEach(row => {
+        table += `<tr>
+          <td>${row.testNumber}</td>
+          <td>${row.year}</td>
+          <td>${row.name}</td>
+        </tr>`;
+      });
+      table += '</table>';
+      resultDiv.innerHTML = table;
+    }
+  </script>
+</body>
+</html>
