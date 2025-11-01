@@ -2,21 +2,25 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>الاستعلام عن رقم الفحص</title>
+  <title>بحث بالرقم القومي</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: "Cairo", sans-serif;
       background: #f9f9f9;
       text-align: center;
       padding: 40px;
+      margin: 0;
     }
     input {
       padding: 10px;
-      width: 250px;
+      width: 90%;
+      max-width: 300px;
       font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 8px;
       text-align: center;
+      box-sizing: border-box;
     }
     button {
       padding: 10px 20px;
@@ -35,11 +39,13 @@
       margin-top: 30px;
       text-align: center;
       direction: rtl;
+      overflow-x: auto;
     }
     table {
       margin: 0 auto;
       border-collapse: collapse;
-      width: 60%;
+      width: 100%;
+      max-width: 600px;
     }
     th, td {
       border: 1px solid #ddd;
@@ -50,100 +56,84 @@
       background-color: #007bff;
       color: white;
     }
-    
-    /* ✅ جعل الجدول متجاوب على الشاشات الصغيرة */
-    @media (max-width: 600px) {
-      body {
-        padding: 15px;
-      }
-
-      .container {
-        padding: 15px;
-      }
-
-      input, button {
-        font-size: 15px;
-        padding: 10px;
-      }
-
-      table {
-        width: 100%;
+    @media (max-width: 500px) {
+      table, th, td {
         font-size: 14px;
-      }
-
-      th, td {
-        padding: 8px;
+        padding: 6px;
       }
     }
   </style>
 </head>
 <body>
 
-  <h2>للاستعلام عن رقم الفحص</h2>
+  <h2>بحث بالرقم القومي</h2>
   <input type="text" id="nationalId" placeholder="أدخل الرقم القومي المكون من 14 رقمًا" maxlength="14" />
   <button onclick="searchById()">بحث</button>
 
   <div id="result"></div>
 
- <script>
-async function searchById() {
-  let id = document.getElementById("nationalId").value.replace(/\s+/g, '');
-  const resultDiv = document.getElementById("result");
+  <script>
+    async function searchById() {
+      let id = document.getElementById("nationalId").value.trim();
+      const resultDiv = document.getElementById("result");
 
-  // تحويل الأرقام العربية للإنجليزية
-  id = id.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+      // تحويل الأرقام العربية للإنجليزية
+      id = id.replace(/[٠-٩]/g, d => '0123456789'[d.charCodeAt(0) - 0x0660]);
+      id = id.replace(/\s+/g, ''); // إزالة أي مسافات
 
-  // التحقق من أن الرقم القومي 14 رقم بالضبط
-  if (!/^\d{14}$/.test(id)) {
-    resultDiv.innerHTML = "<p style='color:red'>الرقم القومي يجب أن يكون 14 رقمًا فقط.</p>";
-    return;
-  }
+      // التحقق من أن الرقم القومي 14 رقم بالضبط
+      if (!/^\d{14}$/.test(id)) {
+        resultDiv.innerHTML = "<p style='color:red'>الرقم القومي يجب أن يكون 14 رقمًا فقط.</p>";
+        return;
+      }
 
-  resultDiv.innerHTML = "<p>جارٍ البحث...</p>";
+      resultDiv.innerHTML = "<p>جارٍ البحث...</p>";
 
-  try {
-    const response = await fetch(`/api/id?id=${encodeURIComponent(id)}`);
-    const data = await response.json();
+      try {
+        const response = await fetch(`/api/id?id=${encodeURIComponent(id)}`);
 
-    if (data.length === 0) {
-      resultDiv.innerHTML = "<p style='color:red'>لا توجد بيانات لهذا الرقم القومي.</p>";
-    } else {
-      let table = `
-        <table>
-          <thead>
-            <tr>
-              <th>رقم الفحص</th>
-              <th>السنة</th>
-              <th>اسم مقدم الطلب</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
+        if (!response.ok) {
+          resultDiv.innerHTML = "<p style='color:red'>حدث خطأ أثناء الاتصال بالسيرفر.</p>";
+          return;
+        }
 
-      data.forEach(row => {
-        table += `
-          <tr>
-            <td>${row[0] || ""}</td>
-            <td>${row[1] || ""}</td>
-            <td>${row[2] || ""}</td>
-          </tr>
-        `;
-      });
+        const data = await response.json();
 
-      table += "</tbody></table>";
-      resultDiv.innerHTML = table;
+        if (!data || data.length === 0) {
+          resultDiv.innerHTML = "<p style='color:red'>لا توجد بيانات لهذا الرقم القومي.</p>";
+        } else {
+          let table = `
+            <table>
+              <thead>
+                <tr>
+                  <th>رقم الفحص</th>
+                  <th>السنة</th>
+                  <th>اسم مقدم الطلب</th>
+                </tr>
+              </thead>
+              <tbody>
+          `;
+
+          data.forEach(row => {
+            table += `
+              <tr>
+                <td>${row[0] || ""}</td>
+                <td>${row[1] || ""}</td>
+                <td>${row[2] || ""}</td>
+              </tr>
+            `;
+          });
+
+          table += "</tbody></table>";
+          resultDiv.innerHTML = table;
+        }
+      } catch (err) {
+        console.error("❌ Error:", err);
+        resultDiv.innerHTML = "<p style='color:red'>حدث خطأ أثناء البحث.</p>";
+      }
     }
-  } catch (err) {
-    console.error(err);
-    resultDiv.innerHTML = "<p style='color:red'>حدث خطأ أثناء البحث.</p>";
-  }
-}
-</script>
+  </script>
 
 </body>
 </html>
-
-
-
-
 
