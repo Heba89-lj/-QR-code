@@ -85,62 +85,64 @@
 
   <div id="result"></div>
 
-  <script>
-    async function searchById() {
-      const id = document.getElementById("nationalId").value.trim();
-      const resultDiv = document.getElementById("result");
+ <script>
+async function searchById() {
+  let id = document.getElementById("nationalId").value.replace(/\s+/g, '');
+  const resultDiv = document.getElementById("result");
 
-      // ✅ التحقق من أن الرقم القومي 14 رقم بالضبط
-      if (!/^\d{14}$/.test(id)) {
-        resultDiv.innerHTML = "<p style='color:red'>الرقم القومي يجب أن يكون 14 رقمًا فقط.</p>";
-        return;
-      }
+  // تحويل الأرقام العربية للإنجليزية
+  id = id.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
 
-      resultDiv.innerHTML = "<p>جارٍ البحث...</p>";
+  // التحقق من أن الرقم القومي 14 رقم بالضبط
+  if (!/^\d{14}$/.test(id)) {
+    resultDiv.innerHTML = "<p style='color:red'>الرقم القومي يجب أن يكون 14 رقمًا فقط.</p>";
+    return;
+  }
 
-      try {
-        // const response = await fetch(`/api/id?id=${id}`);
-        const response = await fetch(`/api/id?id=${encodeURIComponent(id)}`);
+  resultDiv.innerHTML = "<p>جارٍ البحث...</p>";
 
-        const data = await response.json();
+  try {
+    const response = await fetch(`/api/id?id=${encodeURIComponent(id)}`);
+    const data = await response.json();
 
-        if (data.length === 0) {
-          resultDiv.innerHTML = "<p style='color:red'>لا توجد بيانات لهذا الرقم القومي.</p>";
-        } else {
-          let table = `
-            <table>
-              <thead>
-                <tr>
-                  <th>رقم الفحص</th>
-                  <th>السنة</th>
-                  <th>اسم مقدم الطلب</th>
-                </tr>
-              </thead>
-              <tbody>
-          `;
+    if (data.length === 0) {
+      resultDiv.innerHTML = "<p style='color:red'>لا توجد بيانات لهذا الرقم القومي.</p>";
+    } else {
+      let table = `
+        <table>
+          <thead>
+            <tr>
+              <th>رقم الفحص</th>
+              <th>السنة</th>
+              <th>اسم مقدم الطلب</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
 
-          data.forEach(row => {
-            table += `
-              <tr>
-                <td>${row[0] || ""}</td>
-                <td>${row[1] || ""}</td>
-                <td>${row[2] || ""}</td>
-              </tr>
-            `;
-          });
+      data.forEach(row => {
+        table += `
+          <tr>
+            <td>${row[0] || ""}</td>
+            <td>${row[1] || ""}</td>
+            <td>${row[2] || ""}</td>
+          </tr>
+        `;
+      });
 
-          
-          table += "</tbody></table>";
-          resultDiv.innerHTML = table;
-        }
-      } catch (err) {
-        console.error(err);
-        resultDiv.innerHTML = "<p style='color:red'>حدث خطأ أثناء البحث.</p>";
-      }
+      table += "</tbody></table>";
+      resultDiv.innerHTML = table;
     }
-  </script>
+  } catch (err) {
+    console.error(err);
+    resultDiv.innerHTML = "<p style='color:red'>حدث خطأ أثناء البحث.</p>";
+  }
+}
+</script>
+
 </body>
 </html>
+
 
 
 
