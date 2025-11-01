@@ -1,6 +1,5 @@
 // import fetch from "node-fetch";
 
-
 // export default async function handler(req, res) {
 //   const { id } = req.query;
 //    const sheetId = process.env.SHEET_ID;
@@ -93,4 +92,5 @@ export default async function handler(req, res) {
     res.status(500).json({ error: "حدث خطأ أثناء جلب البيانات" });
   }
 }
+
 
