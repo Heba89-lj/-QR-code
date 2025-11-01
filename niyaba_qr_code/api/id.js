@@ -2,8 +2,9 @@ import fetch from "node-fetch";
 
 export default async function handler(req, res) {
   const { id } = req.query;
-  const sheetId = process.env.SHEET_ID;
+   const sheetId = process.env.SHEET_ID;
   const apiKey = process.env.GOOGLE_API_KEY;
+
 
   if (!sheetId || !apiKey) {
     return res.status(500).json({ error: "API key or Sheet ID missing" });
@@ -32,5 +33,6 @@ export default async function handler(req, res) {
     res.status(500).json({ error: "Error fetching data" });
   }
 }
+
 
 
